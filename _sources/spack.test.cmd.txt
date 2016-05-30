@@ -1,0 +1,30 @@
+spack.test.cmd package
+======================
+
+Submodules
+----------
+
+spack.test.cmd.test_install module
+----------------------------------
+
+.. automodule:: spack.test.cmd.test_install
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+spack.test.cmd.uninstall module
+-------------------------------
+
+.. automodule:: spack.test.cmd.uninstall
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: spack.test.cmd
+    :members:
+    :undoc-members:
+    :show-inheritance:
