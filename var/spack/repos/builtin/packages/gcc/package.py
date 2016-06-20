@@ -60,12 +60,21 @@ class Gcc(Package):
             enabled_languages.add('go')
 
         # Generic options to compile GCC
-        options = ["--prefix=%s" % prefix, "--libdir=%s/lib64" % prefix,
+	if spec.satisfies("@4.5:"):
+	        options = ["--prefix=%s" % prefix, "--libdir=%s/lib64" % prefix,
                    "--disable-multilib",
                    "--enable-languages=" + ','.join(enabled_languages),
                    "--with-mpc=%s" % spec['mpc'].prefix, "--with-mpfr=%s" %
                    spec['mpfr'].prefix, "--with-gmp=%s" % spec['gmp'].prefix,
                    "--enable-lto", "--with-quad"]
+	else:
+	        options = ["--prefix=%s" % prefix, "--libdir=%s/lib64" % prefix,
+                   "--disable-multilib",
+                   "--enable-languages=" + ','.join(enabled_languages),
+                   "--with-mpfr=%s" %spec['mpfr'].prefix, 
+                   "--with-gmp=%s" % spec['gmp'].prefix,
+                   "--enable-lto", "--with-quad"]
+
         # Binutils
         if spec.satisfies('+binutils'):
             static_bootstrap_flags = "-static-libstdc++ -static-libgcc"

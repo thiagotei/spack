@@ -22,7 +22,9 @@
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
+import spack
 from spack import *
+import llnl.util.tty as tty
 
 class Gmp(Package):
     """GMP is a free library for arbitrary precision arithmetic,
@@ -36,6 +38,22 @@ class Gmp(Package):
     version('6.0.0' , '6ef5869ae735db9995619135bd856b84')
 
     depends_on("m4")
+
+    curl_options=[
+        '-k']
+
+    def do_fetch(self, mirror_only=False):
+        # Add our custom curl commandline options
+        tty.msg(
+            "[Gmp] Adding required commandline options to curl " +
+            "before performing fetch: %s" %
+            (self.curl_options))
+
+        for option in self.curl_options:
+            spack.curl.add_default_arg(option)
+
+        # Now perform the actual fetch
+        super(Gmp, self).do_fetch(mirror_only)
 
     def install(self, spec, prefix):
         configure("--prefix=%s" % prefix)

@@ -34,17 +34,20 @@ class Rose(Package):
        (Developed at Lawrence Livermore National Lab)"""
 
     homepage = "http://rosecompiler.org/"
-    url      = "https://github.com/rose-compiler/edg4x-rose"
+    url      = "https://github.com/rose-compiler/rose"
 
-    version('master', branch='master', git='https://github.com/rose-compiler/edg4x-rose.git')
+    #version('master', branch='master', git='https://github.com/rose-compiler/edg4x-rose.git')
+    version('0.9.7', tag='v0.9.7', git='https://github.com/rose-compiler/rose.git')
 
-    patch('add_spack_compiler_recognition.patch')
+#    patch('add_spack_compiler_recognition.patch')
 
-    depends_on("autoconf@2.69")
-    depends_on("automake@1.14")
-    depends_on("libtool@2.4")
-    depends_on("boost@1.54.0")
-    depends_on("jdk@8u25-linux-x64")
+  #  depends_on("gcc@4.8.2")
+    depends_on("autoconf@2.69%gcc@4.8.2")
+    depends_on("automake@1.14%gcc@4.8.2")
+    depends_on("libtool@2.4%gcc@4.8.2")
+    depends_on("boost@1.54.0%gcc@4.8.2")
+    #depends_on("jdk@8u25-linux-x64%gcc@4.8.2")
+    depends_on("jdk%gcc@4.8.2")
 
     def install(self, spec, prefix):
         # Bootstrap with autotools
@@ -54,10 +57,13 @@ class Rose(Package):
         # Configure, compile & install
         with working_dir('rose-build', create=True):
             boost = spec['boost']
+	    jdk   = spec['jdk']
 
             configure = Executable('../configure')
             configure("--prefix=" + prefix,
                       "--with-boost=" + boost.prefix,
+                      "--with-java=" + jdk.prefix,
                       "--disable-boost-version-check")
-            make("install-core")
+            #make("install-core")
+            make("install-rose-library")
 

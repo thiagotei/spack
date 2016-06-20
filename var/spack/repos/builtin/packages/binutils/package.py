@@ -22,7 +22,9 @@
 # License along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##############################################################################
+import spack
 from spack import *
+import llnl.util.tty as tty
 
 class Binutils(Package):
     """GNU binutils, which contain the linker, assembler, objdump and others"""
@@ -30,9 +32,8 @@ class Binutils(Package):
 
     url="https://ftp.gnu.org/gnu/binutils/binutils-2.25.tar.bz2"
 
-    # 2.26 is incompatible with py-pillow build for some reason.
     version('2.26', '64146a0faa3b411ba774f47d41de239f')
-    version('2.25', 'd9f3303f802a5b6b0bb73a335ab89d66', preferred=True)
+    version('2.25', 'd9f3303f802a5b6b0bb73a335ab89d66')
     version('2.24', 'e0f71a7b2ddab0f8612336ac81d9636b')
     version('2.23.2', '4f8fa651e35ef262edc01d60fb45702e')
     version('2.20.1', '2b9dc8f2b7dbd5ec5992c6e29de0b764')
@@ -49,6 +50,23 @@ class Binutils(Package):
     patch('cr16.patch')
 
     variant('libiberty', default=False, description='Also install libiberty.')
+
+    curl_options=[
+        '-k']
+
+    def do_fetch(self, mirror_only=False):
+        # Add our custom curl commandline options
+        tty.msg(
+            "[Binutils] Adding required commandline options to curl " +
+            "before performing fetch: %s" %
+            (self.curl_options))
+
+        for option in self.curl_options:
+            spack.curl.add_default_arg(option)
+
+        # Now perform the actual fetch
+        super(Binutils, self).do_fetch(mirror_only)
+
 
     def install(self, spec, prefix):
         configure_args = [
