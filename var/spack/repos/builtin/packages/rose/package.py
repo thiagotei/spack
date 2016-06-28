@@ -63,7 +63,8 @@ class Rose(Package):
             configure("--prefix=" + prefix,
                       "--with-boost=" + boost.prefix,
                       "--with-java=" + jdk.prefix,
-                      "--disable-boost-version-check")
+                      "--disable-boost-version-check",
+		      "LIBS_WITH_RPATH=-Wl,-rpath," + boost.prefix + "/lib" + " -Wl,-rpath," + jdk.prefix +"/jre/lib/amd64/server" )
             #make("install-core")
             make("install-rose-library")
 
